@@ -2,7 +2,7 @@
 # Blind Hunt VR
 
 ## Project Vision
-**Blindfolded Hunt** is a VR hide-and-seek game that places players in the perspective of someone with blindness. The game focuses on sensory deprivation, where players must rely on **echolocation** to navigate and interact with the world. Through sound pulses, players can visualize their surroundings for brief moments, simulating how sound bounces off objects in real life.
+**Blind Hunt VR** is a VR hide-and-seek game that places players in the perspective of someone with blindness. The game focuses on sensory deprivation, where players must rely on **echolocation** to navigate and interact with the world. Through sound pulses, players can visualize their surroundings for brief moments, simulating how sound bounces off objects in real life.
 
 ### Key Features:
 - **Echolocation-based navigation**: Players use sound pulses to create temporary visual representations of their environment.
