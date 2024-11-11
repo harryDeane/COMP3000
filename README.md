@@ -1,6 +1,10 @@
 
 # Blind Hunt VR
 
+## Links
+[Trello Board](https://trello.com/b/H8gmB1Px/blind-hunt-vr-plan)
+
+
 ## Project Vision
 **Blind Hunt VR** is a VR hide-and-seek game that places players in the perspective of someone with blindness. The game focuses on sensory deprivation, where players must rely on **echolocation** to navigate and interact with the world. Through sound pulses, players can visualize their surroundings for brief moments, simulating how sound bounces off objects in real life.
 
