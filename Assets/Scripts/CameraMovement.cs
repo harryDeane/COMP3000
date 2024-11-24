@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Mirror; 
 
-public class CameraMovement : MonoBehaviour
+public class CameraMovement : NetworkBehaviour
 {
     public float mouseSensitivity = 100f;    // Sensitivity for mouse look
     public Transform playerBody;             // The player's body (for rotating the player)

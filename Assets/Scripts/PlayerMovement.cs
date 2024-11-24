@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Mirror;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     public float speed = 5f;
 
@@ -32,8 +33,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Apply movement
-        Vector3 movement = new Vector3(moveInput.x, 0, moveInput.y) * speed * Time.deltaTime;
+        if (isLocalPlayer)
+        { 
+            // Apply movement
+            Vector3 movement = new Vector3(moveInput.x, 0, moveInput.y) * speed * Time.deltaTime;
         transform.Translate(movement);
+            }
+
     }
 }
