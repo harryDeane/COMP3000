@@ -37,6 +37,10 @@ git clone https://github.com/harryDeane/COMP3000.git
 3. Ensure VR hardware is connected and configured (Oculus, HTC Vive, etc.).
 4. Build and run the game in Unity for VR testing.
 
+### DEVLOGS
+
+[Devlog 1](https://youtu.be/fiv9hNTrj-M)
+
 ### Contributors:
 - **Harry Deane**- Developer, Designer
   
