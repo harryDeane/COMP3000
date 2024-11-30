@@ -5,6 +5,14 @@ TagManager:
   serializedVersion: 2
   tags:
   - Anchor
+<<<<<<< Updated upstream
+=======
+  - ReadyButton
+  - Obstacle
+  - glass
+  - Seeker
+  - Hider
+>>>>>>> Stashed changes
   layers:
   - Default
   - TransparentFX
@@ -13,7 +21,7 @@ TagManager:
   - Water
   - UI
   - EchoObject
-  - 
+  - AlertLayer
   - 
   - 
   - 
