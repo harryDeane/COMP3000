@@ -59,7 +59,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2d9917e9-f6d2-4e33-97a6-fb6dfbc9e163"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<XRController>{RightHand}/triggerPressed"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
