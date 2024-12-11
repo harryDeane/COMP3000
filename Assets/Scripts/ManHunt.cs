@@ -19,6 +19,9 @@ public class ManHunt : MonoBehaviour
     private Collider triggerCollider;  // Reference to the trigger collider
     private Renderer playerRenderer;
 
+    // Reference to the GameTimer script
+    private GameTimer gameTimer;
+
     void Start()
     {
         // Find and separate the colliders for different purposes
@@ -28,6 +31,13 @@ public class ManHunt : MonoBehaviour
         // Optional: Set color based on team for visualization (for debugging)
         playerRenderer = GetComponent<Renderer>();
         UpdatePlayerAppearance();
+
+        // Find the GameTimer in the scene
+        gameTimer = FindObjectOfType<GameTimer>();
+        if (gameTimer == null)
+        {
+            Debug.LogError("GameTimer script not found in the scene!");
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -35,11 +45,15 @@ public class ManHunt : MonoBehaviour
         // Ensure the team transition only happens with the trigger
         if (currentTeam == Team.Seeker && other.CompareTag(hiderTag))
         {
-            TransitionToSeeker();
-        }
-        else if (currentTeam == Team.Hider && other.CompareTag(seekerTag))
-        {
-            TransitionToSeeker();
+            var hider = other.GetComponent<ManHunt>();
+            if (hider != null && hider.currentTeam == Team.Hider)
+            {
+                hider.TransitionToSeeker();
+                if (gameTimer != null)
+                {
+                    gameTimer.HiderTagged();
+                }
+            }
         }
     }
 

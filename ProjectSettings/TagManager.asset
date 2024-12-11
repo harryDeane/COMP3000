@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Seeker
+  - Anchor
+  - Obstacle
+  - glass
+  - Hider
   layers:
   - Default
   - TransparentFX
@@ -11,8 +16,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - obstacleLayer
+  - PlayerLayer
   - 
   - 
   - 
