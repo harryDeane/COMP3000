@@ -41,6 +41,8 @@ git clone https://github.com/harryDeane/COMP3000.git
 
 [Devlog 1](https://youtu.be/fiv9hNTrj-M)
 
+[Devlog 2](https://youtu.be/50Km4pPYDIQ)
+
 ### Contributors:
 - **Harry Deane**- Developer, Designer
   
