@@ -41,6 +41,7 @@ public class Echolocation2 : MonoBehaviour
         }
     }
 
+
     private void EmitWave()
     {
         if (pulseVisualPrefab == null)
