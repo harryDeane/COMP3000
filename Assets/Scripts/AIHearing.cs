@@ -1,92 +1,167 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Voice.PUN;
+using UnityEngine.AI;
 
 public class AIHearing : MonoBehaviour
 {
-    public Transform playerTransform; // Reference to the player's transform
-    public float moveSpeed = 5f; // Movement speed of the AI
-    public float hearingRange = 10f; // Maximum distance at which the AI can hear the player
-    public float randomMoveInterval = 3f; // Time interval to choose a new random position
-    public Vector2 mapBounds; // Map boundaries for random movement (assumes a 2D map for simplicity)
+    public float hearingRange = 10f; // Maximum distance for hearing the player
+    public float loudnessThreshold = 0.1f; // Loudness threshold to react
+    public float wanderRadius = 20f; // Radius for random wandering
+    public float wanderTimer = 5f; // Time between random movements
+    public float chaseDuration = 3f; // Time to chase the player before stopping if no sound is heard
 
-    private PhotonVoiceView photonVoiceView;
-    private bool isPlayerTalking = false;
-    private Vector3 randomTargetPosition; // Target position for random movement
-    private float timeToNextRandomMove; // Timer for next random move
+    private Transform player; // Reference to the VR player
+    private NavMeshAgent navMeshAgent; // NavMeshAgent for AI movement
+    private float timer; // Timer for random wandering
+    private bool isChasingPlayer = false; // Whether the AI is chasing the player
+    private bool isChasingSound = false; // Whether the AI is chasing a sound
+    private float chaseCooldownTimer; // Timer to track how long the AI has been chasing without hearing loud sounds
+    private Vector3 targetPosition; // Position of the sound the AI is chasing
 
     void Start()
     {
-        photonVoiceView = playerTransform.GetComponent<PhotonVoiceView>();
-        timeToNextRandomMove = randomMoveInterval; // Start the timer for random movement
-        SetRandomTargetPosition();
+        // Find the VR player by tag
+        player = GameObject.FindGameObjectWithTag("Hider")?.transform;
+        if (player == null)
+        {
+            Debug.LogError("Player not found. Ensure the player has the 'Player' tag.");
+        }
+
+        // Get the NavMeshAgent component
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        if (navMeshAgent == null)
+        {
+            Debug.LogError("NavMeshAgent component is missing on the AI player.");
+        }
+
+        // Initialize the timer
+        timer = wanderTimer;
     }
 
     void Update()
     {
-        // Update the timer for random movement
-        timeToNextRandomMove -= Time.deltaTime;
-        if (timeToNextRandomMove <= 0)
+        if (navMeshAgent == null)
         {
-            SetRandomTargetPosition();
-            timeToNextRandomMove = randomMoveInterval; // Reset the timer
+            Debug.LogError("NavMeshAgent is not assigned.");
+            return;
         }
 
-        // Ensure the PhotonVoiceView component and Recorder are valid
-        if (photonVoiceView != null && photonVoiceView.RecorderInUse != null)
+        if (isChasingSound)
         {
-            // Check if the player is transmitting (actively speaking)
-            isPlayerTalking = photonVoiceView.RecorderInUse.TransmitEnabled;
+            // If chasing a sound, move toward the target position
+            navMeshAgent.SetDestination(targetPosition);
+            Debug.Log("AI is moving toward the sound at: " + targetPosition);
+
+            // Update the chase cooldown timer
+            chaseCooldownTimer -= Time.deltaTime;
+
+            // If the cooldown timer reaches 0, stop chasing
+            if (chaseCooldownTimer <= 0)
+            {
+                Debug.Log("AI stopped chasing because it didn't hear new sounds for " + chaseDuration + " seconds.");
+                isChasingSound = false;
+                WanderRandomly(); // Start wandering again
+            }
         }
 
-        // If the player is talking and within range, move towards the player
-        if (isPlayerTalking && IsPlayerInRange())
+        if (isChasingPlayer)
         {
-            MoveTowardsPlayer();
+            // If chasing the player, move toward them
+            if (player != null)
+            {
+                navMeshAgent.SetDestination(player.position);
+                Debug.Log("AI is moving toward the player.");
+            }
+            else
+            {
+                Debug.LogWarning("Player reference is null.");
+            }
+
+            // Update the chase cooldown timer
+            chaseCooldownTimer -= Time.deltaTime;
+
+            // If the cooldown timer reaches 0, stop chasing
+            if (chaseCooldownTimer <= 0)
+            {
+                Debug.Log("AI stopped chasing because it didn't hear the player for " + chaseDuration + " seconds.");
+                isChasingPlayer = false;
+                WanderRandomly(); // Start wandering again
+            }
         }
         else
         {
-            // Otherwise, move towards the random target
-            MoveTowardsRandomPosition();
+            // Otherwise, wander randomly
+            timer += Time.deltaTime;
+            if (timer >= wanderTimer)
+            {
+                WanderRandomly();
+                timer = 0;
+            }
         }
     }
 
-    bool IsPlayerInRange()
+    // Called when a sound is detected
+    public void OnSoundDetected(Vector3 soundPosition, float loudness)
     {
-        // Calculate the distance between the AI and the player
-        float distance = Vector3.Distance(transform.position, playerTransform.position);
-
-        // Return true if the player is within hearing range
-        return distance <= hearingRange;
-    }
-
-    void SetRandomTargetPosition()
-    {
-        // Generate a random position within the specified map bounds
-        float randomX = Random.Range(-mapBounds.x, mapBounds.x);
-        float randomZ = Random.Range(-mapBounds.y, mapBounds.y);
-        randomTargetPosition = new Vector3(randomX, transform.position.y, randomZ); // Keep AI's current Y position
-    }
-
-    void MoveTowardsPlayer()
-    {
-        // Calculate direction to move towards the player
-        Vector3 direction = (playerTransform.position - transform.position).normalized;
-        transform.position += direction * moveSpeed * Time.deltaTime;
-    }
-
-    void MoveTowardsRandomPosition()
-    {
-        // Calculate direction to move towards the random target
-        Vector3 direction = (randomTargetPosition - transform.position).normalized;
-        transform.position += direction * moveSpeed * Time.deltaTime;
-
-        // If the AI reaches the target position, stop and choose a new target
-        if (Vector3.Distance(transform.position, randomTargetPosition) < 1f) // Threshold for reaching the target
+        // Check if the loudness exceeds the threshold and the sound is within hearing range
+        float distanceToSound = Vector3.Distance(transform.position, soundPosition);
+        if (loudness > loudnessThreshold && distanceToSound <= hearingRange)
         {
-            SetRandomTargetPosition(); // Set a new random target
+            isChasingSound = true; // Start chasing the sound
+            chaseCooldownTimer = chaseDuration; // Reset the chase cooldown timer
+            targetPosition = soundPosition; // Set the target position to the sound's position
+            Debug.Log("AI heard a sound and is chasing it for " + chaseDuration + " seconds.");
+        }
+    }
+
+    // Called when the VR player speaks loudly
+    public void OnLoudSpeechDetected(float loudness)
+    {
+        // Check if the loudness exceeds the threshold and the player is within hearing range
+        if (loudness > loudnessThreshold && IsPlayerInHearingRange())
+        {
+            isChasingPlayer = true; // Start chasing the player
+            chaseCooldownTimer = chaseDuration; // Reset the chase cooldown timer
+            Debug.Log("AI heard the player and is chasing for " + chaseDuration + " seconds.");
+        }
+    }
+
+    // Check if the player is within hearing range
+    private bool IsPlayerInHearingRange()
+    {
+        if (player == null) return false;
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        return distanceToPlayer <= hearingRange;
+    }
+
+    // Make the AI wander randomly within a radius
+    private void WanderRandomly()
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        bool foundPosition = NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, NavMesh.AllAreas);
+
+        if (foundPosition)
+        {
+            navMeshAgent.SetDestination(hit.position);
+            Debug.Log("AI is wandering to: " + hit.position);
+        }
+        else
+        {
+            Debug.LogWarning("Could not find a valid NavMesh position to wander to.");
+        }
+    }
+
+    // Optional: Stop chasing the player if they move out of range
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Hider"))
+        {
+            Debug.Log("Player moved out of range. AI stopped chasing.");
+            isChasingPlayer = false; // Stop chasing
+            WanderRandomly(); // Start wandering again
         }
     }
 }
