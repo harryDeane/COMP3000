@@ -30,7 +30,7 @@ public class MicrophoneInput : MonoBehaviour
     void Update()
     {
         float loudness = GetMicrophoneLoudness();
-        Debug.Log("Microphone Loudness: " + loudness); // Log the loudness for debugging
+        //Debug.Log("Microphone Loudness: " + loudness); // Log the loudness for debugging
 
         if (loudness > loudnessThreshold)
         {

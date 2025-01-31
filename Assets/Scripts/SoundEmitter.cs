@@ -11,11 +11,13 @@ public class SoundEmitter : MonoBehaviour
     // Call this method when the sound is played
     public void EmitSound()
     {
+        Debug.Log("EmitSound called on " + gameObject.name);
         foreach (var ai in aiPlayers)
         {
             if (ai != null)
             {
                 ai.OnSoundDetected(transform.position, soundLoudness);
+                Debug.Log("Sound is being emitted to AI: " + ai.gameObject.name);
             }
         }
     }

@@ -9,6 +9,7 @@ TagManager:
   - Obstacle
   - glass
   - Hider
+  - ReadyButton
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - UI
   - obstacleLayer
   - PlayerLayer
-  - 
+  - Terrain
   - 
   - 
   - 

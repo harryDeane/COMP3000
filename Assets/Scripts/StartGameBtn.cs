@@ -6,8 +6,13 @@ using UnityEngine.SceneManagement;
 public class StartGameBtn : MonoBehaviour
 {
     // Start is called before the first frame update
-    public void StartGame()
+    public void StartLevel1()
     {
-        SceneManager.LoadScene("EcholocationTest");
+        SceneManager.LoadSceneAsync("Main");
+    }
+
+    public void StartLevel2()
+    {
+        SceneManager.LoadSceneAsync("Level2");
     }
 }
