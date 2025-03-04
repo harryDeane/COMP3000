@@ -19,6 +19,8 @@ public class AIHearing : MonoBehaviour
     private float chaseCooldownTimer; // Timer to track how long the AI has been chasing without hearing loud sounds
     private Vector3 targetPosition; // Position of the sound the AI is chasing
 
+    public AudioSource chasingVoice; // The AudioSource for the voiceline
+
     void Start()
     {
         // Find the VR player by tag
@@ -72,6 +74,8 @@ public class AIHearing : MonoBehaviour
             {
                 navMeshAgent.SetDestination(player.position);
                 Debug.Log("AI is moving toward the player.");
+                chasingVoice.Play();
+
             }
             else
             {

@@ -15,4 +15,10 @@ public class StartGameBtn : MonoBehaviour
     {
         SceneManager.LoadSceneAsync("Level2");
     }
+
+    public void Menu()
+    {
+        SceneManager.LoadSceneAsync("MainMenu");
+    }
+
 }
