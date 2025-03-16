@@ -15,6 +15,8 @@ public class LeverProgress : MonoBehaviour
     private float holdTimer = 0f; // Timer to track how long the lever has been held at the target angle
     public SoundEmitter soundEmitter; // Reference to the SoundEmitter component
 
+    public int scoreValue = 100;      // Points awarded for interacting with the glass
+
     private void Update()
     {
         if (IsComplete) return; // Stop updating if the lever action is already complete
@@ -52,6 +54,8 @@ public class LeverProgress : MonoBehaviour
             {
                 IsComplete = true;
                 OnLeverHeldForDuration();
+                // Award points to the player
+                ScoreManager.Instance.AddScore(scoreValue);
             }
         }
         else
@@ -72,6 +76,6 @@ public class LeverProgress : MonoBehaviour
     private void OnLeverHeldForDuration()
     {
         Debug.Log($"{name} lever held for {holdDuration} seconds!");
-        // Trigger other actions, e.g., send event to manager
+       
     }
 }

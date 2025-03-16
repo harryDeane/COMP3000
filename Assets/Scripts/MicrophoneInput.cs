@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System; // For Action
 
 public class MicrophoneInput : MonoBehaviour
 {
-    public float loudnessThreshold = 0.1f; // Threshold for detecting loud speech
+    public float quietLoudnessThreshold = 0.01f; // Threshold for detecting quiet speech
     public AIHearing aiHearing; // Reference to the AIHearing script
+
+    public event Action<float> OnLoudSpeechDetected; // Event for speech detection (quiet or loud)
 
     private AudioClip microphoneClip;
     private string microphoneDevice;
@@ -32,9 +35,10 @@ public class MicrophoneInput : MonoBehaviour
         float loudness = GetMicrophoneLoudness();
         //Debug.Log("Microphone Loudness: " + loudness); // Log the loudness for debugging
 
-        if (loudness > loudnessThreshold)
+        if (loudness > quietLoudnessThreshold)
         {
-            Debug.Log("Player is speaking loudly: " + loudness);
+            Debug.Log("Player is speaking: " + loudness);
+            OnLoudSpeechDetected?.Invoke(loudness); // Trigger the event for any speech above the quiet threshold
             aiHearing.OnLoudSpeechDetected(loudness); // Notify the AI
         }
     }

@@ -16,6 +16,17 @@ public class StartGameBtn : MonoBehaviour
         SceneManager.LoadSceneAsync("Level2");
     }
 
+    public void StartMultiplayer()
+    {
+        SceneManager.LoadSceneAsync("LobbyScene");
+    }
+
+    public void StartSingleplayer()
+    {
+        SceneManager.LoadSceneAsync("MainMenu2");
+    }
+
+
     public void Menu()
     {
         SceneManager.LoadSceneAsync("MainMenu");

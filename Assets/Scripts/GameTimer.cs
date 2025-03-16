@@ -4,19 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+
 public class GameTimer : MonoBehaviour
 {
     public float timerDuration = 60f;  // Total time in seconds
     public Text timerText;
     public Text hiderText;  // UI text to display the number of hiders remaining
-    public int totalHiders = 5;  // Total number of hiders at the start of the game
     private float timeRemaining;
     private int hidersRemaining;
 
     void Start()
     {
         timeRemaining = timerDuration;
-        hidersRemaining = totalHiders;
+
+        // Dynamically get the number of hiders at the start of the game
+        hidersRemaining = GetHiderCount();
         UpdateTimerDisplay();
         UpdateHiderDisplay();
     }
@@ -69,5 +71,13 @@ public class GameTimer : MonoBehaviour
     {
         Debug.Log("Game Over! " + message);
         SceneManager.LoadScene("GameOverScene");  // Make sure this scene exists
+    }
+
+    // Helper method to get the number of hiders in the scene
+    private int GetHiderCount()
+    {
+        // Find all GameObjects with the "Hider" tag
+        GameObject[] hiders = GameObject.FindGameObjectsWithTag("Hider");
+        return hiders.Length;
     }
 }
