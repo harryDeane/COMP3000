@@ -11,8 +11,7 @@ public class LeverManager : MonoBehaviour
     public Animator exitAnimator;
     public Animator exitAnimator2;
 
-    // Name of the animation state to play
-    [SerializeField] private string animationStateName = "Open";
+
 
     private void Update()
     {
@@ -38,15 +37,15 @@ public class LeverManager : MonoBehaviour
         actionObject.SetActive(true);
         actionObject2.SetActive(true);
 
-        // Play the animation on both animators
+        // Set the "IsOpen" parameter to true for both animators
         if (exitAnimator != null)
         {
-            exitAnimator.Play(animationStateName);
+            exitAnimator.SetBool("IsOpen", true);
         }
 
         if (exitAnimator2 != null)
         {
-            exitAnimator2.Play(animationStateName);
+            exitAnimator2.SetBool("IsOpen", true);
         }
 
     }
