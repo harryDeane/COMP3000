@@ -19,6 +19,8 @@ public class AIHearing : MonoBehaviour
     private float chaseCooldownTimer; // Timer to track how long the AI has been chasing without hearing loud sounds
     private Vector3 targetPosition; // Position of the sound the AI is chasing
 
+    public Animator aiAnimator;
+
     public AudioSource chasingVoice; // The AudioSource for the voiceline
 
     void Start()
@@ -51,6 +53,11 @@ public class AIHearing : MonoBehaviour
 
         if (isChasingSound)
         {
+            // Set the "IsOpen" parameter to true for both animators
+            if (aiAnimator != null)
+            {
+                aiAnimator.SetBool("isWalking", true);
+            }
             // If chasing a sound, move toward the target position
             navMeshAgent.SetDestination(targetPosition);
             Debug.Log("AI is moving toward the sound at: " + targetPosition);
@@ -63,6 +70,10 @@ public class AIHearing : MonoBehaviour
             {
                 Debug.Log("AI stopped chasing because it didn't hear new sounds for " + chaseDuration + " seconds.");
                 isChasingSound = false;
+                if (aiAnimator != null)
+                {
+                    aiAnimator.SetBool("isWalking", false);
+                }
                 WanderRandomly(); // Start wandering again
             }
         }
@@ -75,6 +86,10 @@ public class AIHearing : MonoBehaviour
                 navMeshAgent.SetDestination(player.position);
                 Debug.Log("AI is moving toward the player.");
                 chasingVoice.Play();
+                if (aiAnimator != null)
+                {
+                    aiAnimator.SetBool("isWalking", true);
+                }
 
             }
             else
@@ -90,6 +105,10 @@ public class AIHearing : MonoBehaviour
             {
                 Debug.Log("AI stopped chasing because it didn't hear the player for " + chaseDuration + " seconds.");
                 isChasingPlayer = false;
+                if (aiAnimator != null)
+                {
+                    aiAnimator.SetBool("isWalking", false);
+                }
                 WanderRandomly(); // Start wandering again
             }
         }
