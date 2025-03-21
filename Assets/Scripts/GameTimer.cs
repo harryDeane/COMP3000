@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
 public class GameTimer : MonoBehaviour
 {
     public float timerDuration = 60f;  // Total time in seconds
@@ -13,8 +12,13 @@ public class GameTimer : MonoBehaviour
     private float timeRemaining;
     private int hidersRemaining;
 
+    public AudioSource specificAudioSource; // The audio source to keep playing
+
+    public GameObject glitchAnim; // Glitch Animation
+
     void Start()
     {
+        glitchAnim.gameObject.SetActive(false);
         timeRemaining = timerDuration;
 
         // Dynamically get the number of hiders at the start of the game
@@ -66,11 +70,34 @@ public class GameTimer : MonoBehaviour
         }
     }
 
-    // End the game with a specific reason
-    private void EndGame(string message)
+    public void EndGame(string message)
     {
+        StartCoroutine(EndGameWithDelay(message));
+    }
+
+    private IEnumerator EndGameWithDelay(string message)
+    {
+        // Activate the glitch animation
+        glitchAnim.gameObject.SetActive(true);
+
+        AudioListener.pause = true; // Pause all audio
+
+        // Play the specific audio source
+        specificAudioSource.Play();
+
         Debug.Log("Game Over! " + message);
-        SceneManager.LoadScene("GameOverScene");  // Make sure this scene exists
+
+        // Freeze the game by setting time scale to 0
+        Time.timeScale = 0;
+
+        // Wait for 5 seconds in real time (not affected by Time.timeScale)
+        yield return new WaitForSecondsRealtime(5f);
+
+        // Unfreeze the game (optional, if you want to reset time scale)
+        Time.timeScale = 1;
+
+        // Load the GameOverScene after the delay
+        SceneManager.LoadScene("GameOverScene"); // Make sure this scene exists
     }
 
     // Helper method to get the number of hiders in the scene

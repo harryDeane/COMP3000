@@ -9,7 +9,9 @@ public class AIHearing : MonoBehaviour
     public float loudnessThreshold = 0.1f; // Loudness threshold to react
     public float wanderRadius = 20f; // Radius for random wandering
     public float wanderTimer = 5f; // Time between random movements
-    public float chaseDuration = 3f; // Time to chase the player before stopping if no sound is heard
+    public float chaseDuration = 7f; // Time to chase the player before stopping if no sound is heard
+
+    public float aiSpeedThreshold = 1f; // Speed threshold to consider the AI as moving
 
     private Transform player; // Reference to the VR player
     private NavMeshAgent navMeshAgent; // NavMeshAgent for AI movement
@@ -18,6 +20,7 @@ public class AIHearing : MonoBehaviour
     private bool isChasingSound = false; // Whether the AI is chasing a sound
     private float chaseCooldownTimer; // Timer to track how long the AI has been chasing without hearing loud sounds
     private Vector3 targetPosition; // Position of the sound the AI is chasing
+    private Vector3 previousPosition; // Previous position of the AI to calculate speed
 
     public Animator aiAnimator;
 
@@ -51,13 +54,23 @@ public class AIHearing : MonoBehaviour
             return;
         }
 
+        // Calculate the AI's speed
+        float aiSpeed = (transform.position - previousPosition).magnitude / Time.deltaTime;
+        previousPosition = transform.position;
+
+        // Update animations based on AI's speed
+        if (aiSpeed > aiSpeedThreshold)
+        {
+            aiAnimator.SetBool("IsMoving", true); // AI is moving fast
+        }
+        else
+        {
+            aiAnimator.SetBool("IsMoving", false); // AI is idle or moving slowly
+        }
+
+
         if (isChasingSound)
         {
-            // Set the "IsOpen" parameter to true for both animators
-            if (aiAnimator != null)
-            {
-                aiAnimator.SetBool("isWalking", true);
-            }
             // If chasing a sound, move toward the target position
             navMeshAgent.SetDestination(targetPosition);
             Debug.Log("AI is moving toward the sound at: " + targetPosition);
@@ -70,10 +83,7 @@ public class AIHearing : MonoBehaviour
             {
                 Debug.Log("AI stopped chasing because it didn't hear new sounds for " + chaseDuration + " seconds.");
                 isChasingSound = false;
-                if (aiAnimator != null)
-                {
-                    aiAnimator.SetBool("isWalking", false);
-                }
+                
                 WanderRandomly(); // Start wandering again
             }
         }
@@ -86,10 +96,7 @@ public class AIHearing : MonoBehaviour
                 navMeshAgent.SetDestination(player.position);
                 Debug.Log("AI is moving toward the player.");
                 chasingVoice.Play();
-                if (aiAnimator != null)
-                {
-                    aiAnimator.SetBool("isWalking", true);
-                }
+                
 
             }
             else
@@ -105,10 +112,7 @@ public class AIHearing : MonoBehaviour
             {
                 Debug.Log("AI stopped chasing because it didn't hear the player for " + chaseDuration + " seconds.");
                 isChasingPlayer = false;
-                if (aiAnimator != null)
-                {
-                    aiAnimator.SetBool("isWalking", false);
-                }
+                
                 WanderRandomly(); // Start wandering again
             }
         }

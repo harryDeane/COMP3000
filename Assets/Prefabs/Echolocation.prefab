@@ -4868,7 +4868,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   expansionSpeed: 5
   maxScale: 10
-  highlightDuration: 5
+  highlightDuration: 10
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 64

@@ -75,7 +75,7 @@ public class ManHunt : MonoBehaviour
     {
         if (currentTeam == Team.Seeker)
         {
-            playerRenderer.material.color = Color.green;  // Example color for Seeker
+            playerRenderer.material.color = Color.white;  // Example color for Seeker
         }
         else if (currentTeam == Team.Hider)
         {
