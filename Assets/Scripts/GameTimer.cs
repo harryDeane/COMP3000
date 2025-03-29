@@ -12,13 +12,17 @@ public class GameTimer : MonoBehaviour
     private float timeRemaining;
     private int hidersRemaining;
 
+    public string aiLayerName = "obstacleLayer"; // Name of the layer assigned to the AI player
+    public AudioSource[] allAudioSources; // Array of all other audio sources to pause
     public AudioSource specificAudioSource; // The audio source to keep playing
 
     public GameObject glitchAnim; // Glitch Animation
+    public GameObject glitchAudio;
 
     void Start()
     {
         glitchAnim.gameObject.SetActive(false);
+        glitchAudio.gameObject.SetActive(false);
         timeRemaining = timerDuration;
 
         // Dynamically get the number of hiders at the start of the game
@@ -79,25 +83,63 @@ public class GameTimer : MonoBehaviour
     {
         // Activate the glitch animation
         glitchAnim.gameObject.SetActive(true);
-
-        AudioListener.pause = true; // Pause all audio
-
-        // Play the specific audio source
-        specificAudioSource.Play();
+        glitchAudio.gameObject.SetActive(true);
 
         Debug.Log("Game Over! " + message);
 
         // Freeze the game by setting time scale to 0
         Time.timeScale = 0;
 
-        // Wait for 5 seconds in real time (not affected by Time.timeScale)
-        yield return new WaitForSecondsRealtime(5f);
+        // Wait for 2 seconds in real time (not affected by Time.timeScale)
+        yield return new WaitForSecondsRealtime(2f);
 
         // Unfreeze the game (optional, if you want to reset time scale)
         Time.timeScale = 1;
 
         // Load the GameOverScene after the delay
         SceneManager.LoadScene("GameOverScene"); // Make sure this scene exists
+    }
+
+    // Helper method to find an object by layer
+    private GameObject FindObjectByLayer(string layerName)
+    {
+        // Get the layer ID from the layer name
+        int layerID = LayerMask.NameToLayer(layerName);
+
+        if (layerID == -1)
+        {
+            Debug.LogError("Layer '" + layerName + "' does not exist!");
+            return null;
+        }
+
+        // Find all objects in the scene
+        GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject>();
+
+        // Search for an object on the specified layer
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.layer == layerID)
+            {
+                return obj; // Return the first object found on the layer
+            }
+        }
+
+        return null; // No object found on the layer
+    }
+
+    // Helper method to pause all audio sources except the specified one
+    private void PauseAllAudioExcept(AudioSource exception)
+    {
+        // Find all audio sources in the scene
+        AudioSource[] audioSources = FindObjectsOfType<AudioSource>();
+
+        foreach (AudioSource audioSource in audioSources)
+        {
+            if (audioSource != exception && audioSource.isPlaying)
+            {
+                audioSource.Pause(); // Pause all other audio sources
+            }
+        }
     }
 
     // Helper method to get the number of hiders in the scene

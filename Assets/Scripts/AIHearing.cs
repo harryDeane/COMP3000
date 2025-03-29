@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class AIHearing : MonoBehaviour
 {
-    public float hearingRange = 10f; // Maximum distance for hearing the player
-    public float loudnessThreshold = 0.1f; // Loudness threshold to react
+    public float hearingRange = 100f; // Maximum distance for hearing the player
+    public float loudnessThreshold = 0.01f; // Loudness threshold to react
     public float wanderRadius = 20f; // Radius for random wandering
     public float wanderTimer = 5f; // Time between random movements
     public float chaseDuration = 7f; // Time to chase the player before stopping if no sound is heard
@@ -32,7 +32,7 @@ public class AIHearing : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Hider")?.transform;
         if (player == null)
         {
-            Debug.LogError("Player not found. Ensure the player has the 'Player' tag.");
+            Debug.LogError("Player not found. Ensure the player has the 'Hider' tag.");
         }
 
         // Get the NavMeshAgent component
@@ -95,7 +95,6 @@ public class AIHearing : MonoBehaviour
             {
                 navMeshAgent.SetDestination(player.position);
                 Debug.Log("AI is moving toward the player.");
-                chasingVoice.Play();
                 
 
             }
@@ -145,12 +144,13 @@ public class AIHearing : MonoBehaviour
     // Called when the VR player speaks loudly
     public void OnLoudSpeechDetected(float loudness)
     {
-        // Check if the loudness exceeds the threshold and the player is within hearing range
-        if (loudness > loudnessThreshold && IsPlayerInHearingRange())
+        Debug.Log("AIHearing: Loud speech detected with loudness: " + loudness);
+        if (loudness > loudnessThreshold)
         {
+            chasingVoice.Play();
+            Debug.Log("AIHearing: Loudness and range conditions met. Starting chase.");
             isChasingPlayer = true; // Start chasing the player
             chaseCooldownTimer = chaseDuration; // Reset the chase cooldown timer
-            Debug.Log("AI heard the player and is chasing for " + chaseDuration + " seconds.");
         }
     }
 
@@ -159,6 +159,7 @@ public class AIHearing : MonoBehaviour
     {
         if (player == null) return false;
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        Debug.Log("Distance to player: " + distanceToPlayer);
         return distanceToPlayer <= hearingRange;
     }
 
