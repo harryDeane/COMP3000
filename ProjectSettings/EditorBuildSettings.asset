@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
+    path: Assets/Scenes/LoadingScene.unity
     guid: ed4e5b67e6e7bbb41a24804b0d6c48bd
+  - enabled: 1
+    path: Assets/Scenes/MainMenu2.unity
+    guid: 00827cdafd6d0654986c1b4ed89c6fd6
   - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: 6a3913c1358c45e48909a532c7506aeb
@@ -20,13 +23,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/EcholocationTest.unity
     guid: 9eacda6de61305741839368588fe1ff6
-  - enabled: 1
-    path: Assets/Scenes/MainMenu2.unity
-    guid: 00827cdafd6d0654986c1b4ed89c6fd6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/LobbyScene.unity
     guid: 42840c073898a764f95a8482507b724c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Online.unity
     guid: 444c64703d05ae8428d08a4002a1175f
   m_configObjects:
