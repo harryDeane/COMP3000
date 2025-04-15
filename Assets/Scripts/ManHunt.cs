@@ -38,6 +38,7 @@ public class ManHunt : MonoBehaviour
         {
             Debug.LogError("GameTimer script not found in the scene!");
         }
+        
     }
 
     void OnTriggerEnter(Collider other)
@@ -45,14 +46,14 @@ public class ManHunt : MonoBehaviour
         // Ensure the team transition only happens with the trigger
         if (currentTeam == Team.Seeker && other.CompareTag(hiderTag))
         {
+            Debug.Log("Colliding!");
+            gameTimer = FindObjectOfType<GameTimer>();
             var hider = other.GetComponent<ManHunt>();
             if (hider != null && hider.currentTeam == Team.Hider)
             {
-                hider.TransitionToSeeker();
-                if (gameTimer != null)
-                {
-                    gameTimer.HiderTagged();
-                }
+                hider.TransitionToSeeker();              
+                gameTimer.HiderTagged();
+                
             }
         }
     }
@@ -60,13 +61,16 @@ public class ManHunt : MonoBehaviour
     void TransitionToSeeker()
     {
         currentTeam = Team.Seeker;
+        gameObject.tag = seekerTag; 
         UpdatePlayerAppearance();
         Debug.Log("Player is now a Seeker");
     }
 
+
     void TransitionToHider()
     {
         currentTeam = Team.Hider;
+        gameObject.tag = hiderTag;
         UpdatePlayerAppearance();
         Debug.Log("Player is now a Hider");
     }

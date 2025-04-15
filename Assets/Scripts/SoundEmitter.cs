@@ -2,12 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
+
 public class SoundEmitter : MonoBehaviour
 {
-    public float soundLoudness = 0.5f; // Loudness of the sound
-    public float soundRange = 15f; // Range at which the sound can be heard
+    public float soundLoudness = 1f; // Loudness of the sound
+    public float soundRange = 100f; // Range at which the sound can be heard
 
+    private AudioSource audioSource;
     private AIHearing[] aiPlayers; // Array of AI players that can hear the sound
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            Debug.LogError("AudioSource component missing on SoundEmitter GameObject.");
+        }
+
+        audioSource.loop = true;
+    }
 
     private void Start()
     {
@@ -54,5 +68,21 @@ public class SoundEmitter : MonoBehaviour
 
         // Convert the list to an array
         aiPlayers = aiHearingList.ToArray();
+    }
+
+    public void PlayContinuous()
+    {
+        if (!audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
+    }
+
+    public void StopContinuous()
+    {
+        if (audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
     }
 }

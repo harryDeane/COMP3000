@@ -5,11 +5,13 @@ using UnityEngine.AI;
 
 public class AIHearing : MonoBehaviour
 {
-    public float hearingRange = 100f; // Maximum distance for hearing the player
+    public float hearingRange = 1000f; // Maximum distance for hearing the player
     public float loudnessThreshold = 0.01f; // Loudness threshold to react
     public float wanderRadius = 20f; // Radius for random wandering
     public float wanderTimer = 5f; // Time between random movements
     public float chaseDuration = 7f; // Time to chase the player before stopping if no sound is heard
+
+    public float soundLoudnessToDistanceMultiplier = 100f;
 
     public float aiSpeedThreshold = 1f; // Speed threshold to consider the AI as moving
 
@@ -71,20 +73,21 @@ public class AIHearing : MonoBehaviour
 
         if (isChasingSound)
         {
-            // If chasing a sound, move toward the target position
+            float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+
+            // Keep updating the destination to the target position
             navMeshAgent.SetDestination(targetPosition);
             Debug.Log("AI is moving toward the sound at: " + targetPosition);
 
-            // Update the chase cooldown timer
-            chaseCooldownTimer -= Time.deltaTime;
-
-            // If the cooldown timer reaches 0, stop chasing
-            if (chaseCooldownTimer <= 0)
+            // Check if we've reached the sound location
+            if (distanceToTarget <= navMeshAgent.stoppingDistance + 0.5f) // + buffer to account for slight overshoot
             {
-                Debug.Log("AI stopped chasing because it didn't hear new sounds for " + chaseDuration + " seconds.");
+                Debug.Log("AI reached the sound location.");
                 isChasingSound = false;
-                
-                WanderRandomly(); // Start wandering again
+
+                // Optionally pause or investigate here...
+
+                WanderRandomly(); // Resume wandering or some idle behavior
             }
         }
 
@@ -132,13 +135,14 @@ public class AIHearing : MonoBehaviour
     {
         // Check if the loudness exceeds the threshold and the sound is within hearing range
         float distanceToSound = Vector3.Distance(transform.position, soundPosition);
-        if (loudness > loudnessThreshold && distanceToSound <= hearingRange)
+        float maxDistanceHeard = loudness * soundLoudnessToDistanceMultiplier;
+        if (distanceToSound <= maxDistanceHeard)
         {
-            isChasingSound = true; // Start chasing the sound
-            chaseCooldownTimer = chaseDuration; // Reset the chase cooldown timer
-            targetPosition = soundPosition; // Set the target position to the sound's position
-            Debug.Log("AI heard a sound and is chasing it for " + chaseDuration + " seconds.");
+            isChasingSound = true;
+            targetPosition = soundPosition;
+            Debug.Log("AI heard a sound and is chasing it.");
         }
+
     }
 
     // Called when the VR player speaks loudly
@@ -183,13 +187,5 @@ public class AIHearing : MonoBehaviour
     }
 
     // Optional: Stop chasing the player if they move out of range
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Hider"))
-        {
-            Debug.Log("Player moved out of range. AI stopped chasing.");
-            isChasingPlayer = false; // Stop chasing
-            WanderRandomly(); // Start wandering again
-        }
-    }
+    
 }

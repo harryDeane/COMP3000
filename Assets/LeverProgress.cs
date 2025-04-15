@@ -30,6 +30,11 @@ public class LeverProgress : MonoBehaviour
             // Increment the hold timer
             holdTimer += Time.deltaTime;
 
+            if (soundEmitter != null)
+            {
+                soundEmitter.PlayContinuous();
+            }
+
             // Update the visual object's scale or fill
             if (visualObject != null)
             {
@@ -41,7 +46,8 @@ public class LeverProgress : MonoBehaviour
                 if (soundEmitter != null)
                 {
                     soundEmitter.EmitSound();
-                    Debug.Log("Bird emitted sound as it fled.");
+
+                    Debug.Log("Lever is making sound.");
                 }
                 else
                 {
@@ -56,6 +62,11 @@ public class LeverProgress : MonoBehaviour
                 OnLeverHeldForDuration();
                 // Award points to the player
                 ScoreManager.Instance.AddScore(scoreValue);
+                // Stop sound when lever is not in position
+                if (soundEmitter != null)
+                {
+                    soundEmitter.StopContinuous();
+                }
             }
         }
         else
@@ -69,6 +80,12 @@ public class LeverProgress : MonoBehaviour
                 Vector3 scale = visualObject.localScale;
                 scale.y = 0f;
                 visualObject.localScale = scale;
+            }
+
+            // Stop sound when lever is not in position
+            if (soundEmitter != null)
+            {
+                soundEmitter.StopContinuous();
             }
         }
     }

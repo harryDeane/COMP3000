@@ -12,6 +12,7 @@ public class GlassInteraction : MonoBehaviour
     public float minScale = 1f;      // Min scale for pulsating effect
     public LayerMask viewableLayer;  // Ensure the alert is visible through obstacles
     public int scoreValue = 10;      // Points awarded for interacting with the glass
+    public SoundEmitter soundEmitter; // Reference to the SoundEmitter component
 
     private AudioSource audioSource;
 
@@ -34,6 +35,7 @@ public class GlassInteraction : MonoBehaviour
             ShowVisualAlert();
             // Award points to the player
             ScoreManager.Instance.AddScore(scoreValue);
+            soundEmitter.EmitSound();
         }
     }
 
