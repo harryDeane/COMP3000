@@ -2398,6 +2398,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1588722426}
   m_CullTransparentMesh: 1
+--- !u!1 &1675344034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1675344036}
+  - component: {fileID: 1675344035}
+  m_Layer: 0
+  m_Name: Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1675344035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675344034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82f2dc6b6581f954d809574ff1c5c450, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadingScreenPrefab: {fileID: 3036266703158137577, guid: 5049c76621d2ee649a5c236670fcd95c, type: 3}
+  minimumLoadingTime: 3
+  loadingTips:
+  - Stay Hidden, Stay Quiet
+  - Listen for the Generators
+--- !u!4 &1675344036
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675344034}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.26801115, y: 1.431852, z: -2.602342}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1970606808
 GameObject:
   m_ObjectHideFlags: 0
@@ -3164,3 +3213,4 @@ SceneRoots:
   - {fileID: 810783651}
   - {fileID: 395692082}
   - {fileID: 331059237}
+  - {fileID: 1675344036}

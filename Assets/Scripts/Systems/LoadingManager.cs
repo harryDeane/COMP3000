@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro; 
 
 public class LoadingManager : MonoBehaviour
 {
@@ -9,14 +10,14 @@ public class LoadingManager : MonoBehaviour
     [SerializeField] private GameObject loadingScreenPrefab;
 
     [Header("Loading Settings")]
-    [SerializeField] private float minimumLoadingTime = 1.5f;
+    [SerializeField] private float minimumLoadingTime = 3f;
     [SerializeField] private string[] loadingTips;
 
     // Runtime references
     private GameObject loadingScreenInstance;
     private Slider progressBar;
-    private Text progressText;
-    private Text tipText;
+    private TextMeshProUGUI progressText; 
+    private TextMeshProUGUI tipText;      
 
     private static LoadingManager _instance;
     private static bool _isLoading = false;
@@ -44,7 +45,6 @@ public class LoadingManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Check for required prefab
         if (loadingScreenPrefab == null)
         {
             Debug.LogError("Loading Screen Prefab is not assigned in the LoadingManager!");
@@ -70,27 +70,22 @@ public class LoadingManager : MonoBehaviour
     {
         _isLoading = true;
 
-        // Create the loading screen UI
         CreateLoadingScreen();
 
-        // Display a random tip
         if (tipText != null && loadingTips != null && loadingTips.Length > 0)
         {
             tipText.text = loadingTips[Random.Range(0, loadingTips.Length)];
         }
 
-        // Start the async load
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
         operation.allowSceneActivation = false;
 
         float startTime = Time.time;
 
-        // Wait until the load is mostly complete
         while (operation.progress < 0.9f)
         {
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
 
-            // Update UI if available
             if (progressBar != null)
             {
                 progressBar.value = progress;
@@ -104,14 +99,12 @@ public class LoadingManager : MonoBehaviour
             yield return null;
         }
 
-        // Ensure minimum loading time
         float elapsedTime = Time.time - startTime;
         if (elapsedTime < minimumLoadingTime)
         {
             float remainingTime = minimumLoadingTime - elapsedTime;
             float startProgress = progressBar != null ? progressBar.value : 0.9f;
 
-            // Animate to 100% during the remaining time
             while (remainingTime > 0)
             {
                 remainingTime -= Time.deltaTime;
@@ -132,7 +125,6 @@ public class LoadingManager : MonoBehaviour
             }
         }
 
-        // Complete loading
         if (progressBar != null)
         {
             progressBar.value = 1.0f;
@@ -143,13 +135,10 @@ public class LoadingManager : MonoBehaviour
             progressText.text = "100%";
         }
 
-        // Allow the scene to activate
         operation.allowSceneActivation = true;
 
-        // Wait for the scene to fully activate
         yield return new WaitForSeconds(0.5f);
 
-        // Destroy the loading screen
         DestroyLoadingScreen();
 
         _isLoading = false;
@@ -157,29 +146,23 @@ public class LoadingManager : MonoBehaviour
 
     private void CreateLoadingScreen()
     {
-        // Only create if it doesn't exist
         if (loadingScreenInstance == null)
         {
-            // Instantiate the loading screen prefab
             loadingScreenInstance = Instantiate(loadingScreenPrefab);
-
-            // Make sure it survives scene changes
             DontDestroyOnLoad(loadingScreenInstance);
 
-            // Ensure the canvas renders on top
             Canvas canvas = loadingScreenInstance.GetComponent<Canvas>();
             if (canvas != null)
             {
-                canvas.sortingOrder = 999; // Highest priority
-                canvas.worldCamera = Camera.main; // For VR, you might need to set this
+                canvas.sortingOrder = 999;
+                canvas.worldCamera = Camera.main;
             }
 
-            // Find the references within the instantiated prefab
             progressBar = loadingScreenInstance.GetComponentInChildren<Slider>();
 
-            // Find Text components - can be extended for TextMeshPro if needed
-            Text[] texts = loadingScreenInstance.GetComponentsInChildren<Text>();
-            foreach (Text text in texts)
+            
+            TextMeshProUGUI[] texts = loadingScreenInstance.GetComponentsInChildren<TextMeshProUGUI>();
+            foreach (TextMeshProUGUI text in texts)
             {
                 if (text.gameObject.name.Contains("Progress"))
                 {
@@ -190,10 +173,10 @@ public class LoadingManager : MonoBehaviour
                     tipText = text;
                 }
             }
+           
         }
         else
         {
-            // Make sure it's active
             loadingScreenInstance.SetActive(true);
         }
     }

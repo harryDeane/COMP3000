@@ -8,12 +8,12 @@ public class StartGameBtn : MonoBehaviour
     // Start is called before the first frame update
     public void StartLevel1()
     {
-        SceneManager.LoadSceneAsync("Main");
+        LoadingManager.Instance.LoadScene("Main");
     }
 
     public void StartLevel2()
     {
-        SceneManager.LoadSceneAsync("Level2");
+        LoadingManager.Instance.LoadScene("Level2");
     }
 
     public void StartMultiplayer()
