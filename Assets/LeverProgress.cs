@@ -5,10 +5,10 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class LeverProgress : MonoBehaviour
 {
-    [SerializeField] private Transform visualObject; // The object to fill (e.g., a scale or progress bar)
+    [SerializeField] private Transform visualObject; // The object to fill 
     [SerializeField] private HingeJoint hingeJoint; // The hinge joint for the lever
     [SerializeField] private float targetAngle = 180f; // Target angle to hold the lever at
-    [SerializeField] private float angleThreshold = 5f; // Allowed deviation from the target angle
+    [SerializeField] private float angleThreshold = 15f; // Allowed deviation from the target angle
     [SerializeField] private float holdDuration = 10f; // Time (in seconds) to hold the lever at the target angle
     public bool IsComplete { get; private set; } = false; // Public read-only property
 
