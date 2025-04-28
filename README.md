@@ -12,9 +12,13 @@
 
 ### Key Features:
 - **Echolocation-based navigation**: Players use sound pulses to create temporary visual representations of their environment.
-- **Multiplayer gameplay**: Players take on roles as Seekers or Hiders, using strategic sound-based gameplay to evade or capture opponents.
 - **Environmental interaction**: Objects in the environment react to sound, providing both obstacles and opportunities.
+
+
+### Future Updates:
+- **Multiplayer gameplay**: Players take on roles as Seekers or Hiders, using strategic sound-based gameplay to evade or capture opponents.
 - **Proximity chat**: Real-time communication allows for strategic planning, but also risks giving away positions through sound.
+
 
 ### Technologies Used:
 - **Unity Editor 2022.3.21f1** for game development
@@ -42,6 +46,12 @@ git clone https://github.com/harryDeane/COMP3000.git
 [Devlog 1](https://youtu.be/fiv9hNTrj-M)
 
 [Devlog 2](https://youtu.be/50Km4pPYDIQ)
+
+[Devlog 3](https://youtu.be/wXtdJUFlAv0)
+
+[Devlog 4](https://youtu.be/qO0pwuudw6I)
+
+[Devlog 5](https://youtu.be/atqDDu9vULo)
 
 ### Contributors:
 - **Harry Deane**- Developer, Designer
