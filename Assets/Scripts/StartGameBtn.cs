@@ -26,4 +26,14 @@ public class StartGameBtn : MonoBehaviour
         LoadingManager.Instance.LoadScene("MainMenu2");
     }
 
+    public void StartLevelSelect()
+    {
+        SceneManager.LoadSceneAsync("LevelSelect");
+    }
+
+    public void StartMenu()
+    {
+        SceneManager.LoadSceneAsync("MainMenu2");
+    }
+
 }

@@ -5,7 +5,7 @@ using System; // For Action
 
 public class MicrophoneInput : MonoBehaviour
 {
-    public float quietLoudnessThreshold = 0.01f; // Threshold for detecting quiet speech
+    public float quietLoudnessThreshold => GameSettings.Instance.CurrentSensitivity; // Threshold for detecting quiet speech
     private AIHearing aiHearing; // Reference to the AIHearing script
 
     public event Action<float> OnLoudSpeechDetected; // Event for speech detection (quiet or loud)

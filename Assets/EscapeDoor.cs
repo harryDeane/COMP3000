@@ -17,7 +17,7 @@ public class EscapeDoor : MonoBehaviour
         if (other.CompareTag("Hider"))
         {
             // Load the GameOverScene
-            SceneManager.LoadScene("GameOverScene");
+            SceneManager.LoadScene("WinScreen");
         }
     }
 }
